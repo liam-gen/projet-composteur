@@ -1,4 +1,4 @@
-# projet-composteur
+# Projet composteur
 Repo du projet composteur
 
 
