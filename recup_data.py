@@ -9,11 +9,22 @@ again. This way you will easily spot the serial device name of your Arduino.
 """
 
 #python3 -m pip install pyserial
-import serial
+"""import serial
 if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
     ser.reset_input_buffer()
     while True:
         if ser.in_waiting > 0:
             line = ser.readline().decode('utf-8').rstrip()
-            print(line)
+            print(line)"""
+
+
+import sqlite3
+con = sqlite3.connect("database.sql")
+
+cur = con.cursor()
+cur.execute("CREATE TABLE CAPT_TEM_HUM(id INT PRIMARY KEY NOT NULL, value VARCHAR(255), time DATETIME)")
+
+def stock_data(capteur, value):
+    cur = con.cursor()
+    cur.execute("CREATE TABLE movie(title, year, score)")
