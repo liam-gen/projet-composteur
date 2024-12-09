@@ -16,7 +16,7 @@ get_last_data(capteur)
 
 | **Nom**   | Type|
 | -------------   | --------- |
-| **Retour** | `list -> [id, float, time]` |
+| **Retour** | `dict -> {id, float, time}` |
 
 ### Récupération de toutes les données par l'IHM
 
@@ -26,7 +26,7 @@ get_all_data(capteur)
 
 | **Nom**   | Type|
 | -------------   | --------- |
-| **Retour** | `list -> [[id, float, time]]` |
+| **Retour** | `list -> [{id, float, time}]` |
 
 ### Récupération de toutes les données par l'IHM
 
@@ -36,4 +36,4 @@ get_interval_data(capteur, start_time, end_time)
 
 | **Nom**   | Type|
 | -------------   | --------- |
-| **Retour** | `list -> [[id, float, time]]` |
+| **Retour** | `list -> [{id, float, time}]` |
