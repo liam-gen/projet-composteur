@@ -14,4 +14,6 @@ Repo du projet composteur
 get_last_data(capteur)
 ```
 
+| **Nom**   | Type|
+| -------------   | --------- |
 | **Retour** | `[id, float, time]` |
