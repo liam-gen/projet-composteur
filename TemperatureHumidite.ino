@@ -28,7 +28,7 @@ void loop() {
         //debug.print(temp_hum_val[1]);
         //debug.println(" *C");
     } else {
-        debug.println('{type: "CAPT_TEMP_HUM", value: [null, null], error: true}');
+        debug.println('{type: "CAPT_TEMP_HUM", error: true}');
         //debug.println("Failed to get temprature and humidity value.");
     }
 
