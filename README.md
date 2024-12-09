@@ -16,4 +16,24 @@ get_last_data(capteur)
 
 | **Nom**   | Type|
 | -------------   | --------- |
-| **Retour** | `[id, float, time]` |
+| **Retour** | `list -> [id, float, time]` |
+
+### Récupération de toutes les données par l'IHM
+
+```py
+get_all_data(capteur)
+```
+
+| **Nom**   | Type|
+| -------------   | --------- |
+| **Retour** | `list -> [[id, float, time]]` |
+
+### Récupération de toutes les données par l'IHM
+
+```py
+get_interval_data(capteur, start_time, end_time)
+```
+
+| **Nom**   | Type|
+| -------------   | --------- |
+| **Retour** | `list -> [[id, float, time]]` |
