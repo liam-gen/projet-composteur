@@ -17,15 +17,19 @@ void setup() {
 void loop() {
     float temp_hum_val[2] = {0};
 
+    // Format JSON : {"type": "type_du_capteur", "value": valeur, "error": true/false}
+
     if (!dht.readTempAndHumidity(temp_hum_val)) {
-        debug.print("Humidity: ");
-        debug.print(temp_hum_val[0]);
-        debug.print(" %\t");
-        debug.print("Temperature: ");
-        debug.print(temp_hum_val[1]);
-        debug.println(" *C");
+        debug.println('{type: "CAPT_TEMP_HUM", value: ['+temp_hum_val[0]+', '+temp_hum_val[1]+'], error: false}');
+        //debug.print("Humidity: ");
+        //debug.print(temp_hum_val[0]);
+        //debug.print(" %\t");
+        //debug.print("Temperature: ");
+        //debug.print(temp_hum_val[1]);
+        //debug.println(" *C");
     } else {
-        debug.println("Failed to get temprature and humidity value.");
+        debug.println('{type: "CAPT_TEMP_HUM", value: [null, null], error: true}');
+        //debug.println("Failed to get temprature and humidity value.");
     }
 
     delay(1500);
