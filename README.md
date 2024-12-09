@@ -8,6 +8,10 @@ Repo du projet composteur
 
 ## Fonctions
 
+### Récupération des dernière données par l'IHM
+
 ```py
-recup_data()
+get_last_data(capteur)
 ```
+
+| **Retour** | `[id, float, time]` |
