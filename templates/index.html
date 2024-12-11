@@ -6,6 +6,14 @@
     <title>Composteur</title>
 </head>
 <body>
-    <h1>ouais</h1>
+    <h1>Résultats</h1>
+
+    <p id="capteur_humidite"></p>
+
+    <script>
+        fetch("/api/data/CAPT_TEMP_HUM").then(res => res.json).then(data => {
+            document.getElementById("capteur_humidite").innerText = data[0];
+        })
+    </script>
 </body>
 </html>
