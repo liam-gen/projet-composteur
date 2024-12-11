@@ -11,9 +11,13 @@
     <p id="capteur_humidite"></p>
 
     <script>
-        fetch("/api/data/CAPT_TEMP_HUM").then(res => res.json).then(data => {
-            document.getElementById("capteur_humidite").innerText = data[0];
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/api/data/CAPT_TEMP_HUM").then(res => res.json()).then(data => {
+                console.log(data)
+                document.getElementById("capteur_humidite").innerText = data[0];
+            })
         })
+        
     </script>
 </body>
 </html>
