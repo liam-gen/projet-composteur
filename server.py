@@ -3,7 +3,8 @@ import serial
 import json
 import multiprocessing
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='public')
+values = {}
 
 @app.route("/")
 def hello_world():
