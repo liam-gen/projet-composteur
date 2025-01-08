@@ -1,3 +1,5 @@
+#include "ArduinoJson.h"
+
 #define DHTPIN 2 // Pin DHT11
 
 uint8_t dht_data[5];  
@@ -11,15 +13,21 @@ void setup() {
 }
 
 void loop() {
-  if (readDHT()) {
-    int humidity = dht_data[0];
-    int temperature = dht_data[2];
-  } else {
-    // Si la lecture échoue
-    Serial.println("Erreur de lecture !");
-  }
+  // Stockage de tous les résultats
+  JsonDocument result;
+
   
-  delay(2000);  // Attendre 2 secondes avant de lire à nouveau
+  if (readDHT()) {
+    result["TEMP_EXT"] = dht_data[2];
+    result["HUM_EXT"] = dht_data[0];
+  } else {
+    result["TEMP_EXT"] = false;
+    result["HUM_EXT"] = false;
+  }
+
+
+  // Afficher les données dans le serial
+  serializeJson(result, Serial);
 }
 
 // Fonction pour lire les données du DHT11
