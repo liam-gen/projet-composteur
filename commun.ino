@@ -1,11 +1,21 @@
 #include "ArduinoJson.h"
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 /* DHT11 CONFIG */
 #define DHTPIN 2
-uint8_t dht_data[5]; 
+uint8_t dht_data[5];
+
+/* DS18B20 CONFIG */
+#define ONE_WIRE_BUS 3
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
 
 void setup() {
   Serial.begin(9600);
+  
+  /* DS18B20 CONFIG */
+  sensors.begin();
 
   /* DHT11 CONFIG */
   pinMode(DHTPIN, OUTPUT);
@@ -25,6 +35,8 @@ void loop() {
     result["TEMP_EXT"] = false;
     result["HUM_EXT"] = false;
   }
+
+  result["TEMP_INT"] = getIntTemperature();
 
 
   // Afficher les données dans le serial
@@ -80,4 +92,17 @@ bool readDHT() {
   } else {
     return false;  // Si le checksum est incorrect, retourner false
   }
+}
+
+int getIntTemperature(){
+
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  float tempC = sensors.getTempCByIndex(0);
+  
+  if(tempC != DEVICE_DISCONNECTED_C) 
+  {
+    return tempC;
+  } 
+
+  return false;
 }
