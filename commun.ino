@@ -1,12 +1,13 @@
 #include "ArduinoJson.h"
 
-#define DHTPIN 2 // Pin DHT11
-
-uint8_t dht_data[5];  
+/* DHT11 CONFIG */
+#define DHTPIN 2
+uint8_t dht_data[5]; 
 
 void setup() {
   Serial.begin(9600);
-  
+
+  /* DHT11 CONFIG */
   pinMode(DHTPIN, OUTPUT);
   digitalWrite(DHTPIN, HIGH);
   delay(1000);
@@ -16,7 +17,7 @@ void loop() {
   // Stockage de tous les résultats
   JsonDocument result;
 
-  
+  /* DHT11 DATA */
   if (readDHT()) {
     result["TEMP_EXT"] = dht_data[2];
     result["HUM_EXT"] = dht_data[0];
@@ -28,6 +29,7 @@ void loop() {
 
   // Afficher les données dans le serial
   serializeJson(result, Serial);
+  Serial.println("");
 }
 
 // Fonction pour lire les données du DHT11
