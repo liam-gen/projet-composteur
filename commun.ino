@@ -3,11 +3,11 @@
 #include <DallasTemperature.h>
 
 /* DHT11 CONFIG */
-#define DHTPIN 7
+#define DHTPIN 2
 uint8_t dht_data[5];
 
 /* DS18B20 CONFIG */
-#define ONE_WIRE_BUS 3
+#define ONE_WIRE_BUS 7
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
