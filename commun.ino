@@ -14,6 +14,10 @@ DallasTemperature sensors(&oneWire);
 /* Niveau eau */
 int PIN_REMPLISSAGE = A0;
 
+/* Moisture sensor */
+
+int PIN_MOISTURE = A2;
+
 void setup() {
   Serial.begin(9600);
   
@@ -41,7 +45,7 @@ void loop() {
 
   result["TEMP_INT"] = getIntTemperature();
 
-  result["REMPLISAGE"] = getRemplissage();
+  result["REMPLISSAGE"] = getRemplissage();
 
 
   // Afficher les données dans le serial
@@ -122,4 +126,18 @@ float getRemplissage()
   // Convertir en pourcentage
   float pourcent = 100*v/5;
   return pourcent;
+}
+
+float getMoisture()
+{
+
+  int N = analogRead(PIN_MOISTURE);
+  
+  //conversion information capteur vers tension
+  int V = N*(5.0/1023);
+  
+  //conversion tension vers humidité
+  int H = V /(3.26/100);
+
+  return H;
 }
