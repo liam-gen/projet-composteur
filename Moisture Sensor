@@ -1,0 +1,27 @@
+#define pin_capteur : A0
+//déclaration des variables
+int N ;
+float V ;
+int H ;
+
+void setup() {
+//initialisation de la liason série
+Serial.begin(9600);
+
+}
+
+void loop() {
+  
+//acquisition info en sortie du capteur
+N= analogRead (A0);
+
+//conversion information capteur vers tension
+V = N*(5.0/1023);
+
+//conversion tension vers humidité
+H = V /(3.26/100);
+
+Serial.print(H);
+Serial.println("%");
+delay(1000);
+}
