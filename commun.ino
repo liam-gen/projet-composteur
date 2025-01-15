@@ -47,6 +47,8 @@ void loop() {
 
   result["REMPLISSAGE"] = getRemplissage();
 
+  result["MOISTURE"] = getMoisture();
+
 
   // Afficher les données dans le serial
   serializeJson(result, Serial);
