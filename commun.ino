@@ -11,6 +11,9 @@ uint8_t dht_data[5];
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
+/* Niveau eau */
+int PIN_REMPLISSAGE = A0;
+
 void setup() {
   Serial.begin(9600);
   
@@ -37,6 +40,8 @@ void loop() {
   }
 
   result["TEMP_INT"] = getIntTemperature();
+
+  result["REMPLISAGE"] = getRemplissage();
 
 
   // Afficher les données dans le serial
@@ -105,4 +110,16 @@ int getIntTemperature(){
   } 
 
   return false;
+}
+
+float getRemplissage()
+{
+  int data = analogRead(PIN_REMPLISSAGE);
+
+  // Convertir tension
+  float v = (5.0/1023)*data;
+
+  // Convertir en pourcentage
+  float pourcent = 100*v/5;
+  return pourcent;
 }
