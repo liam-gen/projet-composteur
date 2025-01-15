@@ -3,7 +3,7 @@
 #include <DallasTemperature.h>
 
 /* DHT11 CONFIG */
-#define DHTPIN 2
+#define DHTPIN 7
 uint8_t dht_data[5];
 
 /* DS18B20 CONFIG */
