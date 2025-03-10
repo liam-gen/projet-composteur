@@ -1,6 +1,8 @@
 #include "ArduinoJson.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <Wire.h>
+#include "MutichannelGasSensor.h"
 
 /* DHT11 CONFIG */
 #define DHTPIN 2
@@ -18,11 +20,42 @@ int PIN_REMPLISSAGE = A0;
 
 int PIN_MOISTURE = A2;
 
+/* Etat du moteur */
+
+int PIN_MOTEUR = 8;
+
+/* CO?FIG PHMETRE */
+
+#include <EEPROM.h>
+
+#define SensorPin A1
+#define samplingInterval 20
+#define printInterval 800
+#define ArrayLenth 40
+#define uart Serial
+
+float voltage_4 = 0.46;
+float voltage_7 = 1.82;
+float slope, intercept;
+
+int pHArray[ArrayLenth];    
+int pHArrayIndex = 0;
+
 void setup() {
   Serial.begin(9600);
   
   /* DS18B20 CONFIG */
   sensors.begin();
+
+  /* PHMETRE */
+  loadCalibration();
+
+  /* GAS CONFIG */
+  gas.begin(0x04);
+  gas.powerOn();
+
+  /* Moteur */
+  pinMode(PIN_MOTEUR, INPUT);
 
   /* DHT11 CONFIG */
   pinMode(DHTPIN, OUTPUT);
@@ -49,10 +82,44 @@ void loop() {
 
   result["MOISTURE"] = getMoisture();
 
+  result["MOTOR"] = digitalRead(PIN_MOTEUR);
 
-  // Afficher les données dans le serial
-  serializeJson(result, Serial);
-  Serial.println("");
+  // Amoniac
+    result["AMONIAC"] = gas.measure_NH3();
+
+    // Méthane
+    result["METHANE"] = gas.measure_CH4();
+
+  //result["PH"] = getPhValue();
+
+  static unsigned long samplingTime = millis();
+  static unsigned long printTime = millis();
+  static float pHValue, voltage;
+
+  if (millis() - samplingTime > samplingInterval) {
+    pHArray[pHArrayIndex++] = analogRead(SensorPin);
+    if (pHArrayIndex == ArrayLenth) pHArrayIndex = 0;
+
+    //Serial.println(analogRead(SensorPin));
+
+    voltage = avergearray(pHArray, ArrayLenth) * 5.0 / 1024;
+    pHValue = slope * voltage + intercept;  
+
+    samplingTime = millis();
+  }
+
+  if (millis() - printTime > printInterval) {
+    printTime = millis();
+
+    result["PH"] = pHValue;
+
+    // Afficher les données en serial
+
+    serializeJson(result, Serial);
+    Serial.println("");
+  
+    delay(1000);
+  }
 }
 
 // Fonction pour lire les données du DHT11
@@ -142,4 +209,85 @@ float getMoisture()
   int H = V /(3.26/100);
 
   return H;
+}
+
+/* PHMETRE */
+
+float getPhValue()
+{
+  //Serial.println(analogRead(SensorPin));
+  static unsigned long samplingTime = millis();
+  static unsigned long printTime = millis();
+  static float pHValue, voltage;
+
+  if (millis() - samplingTime > samplingInterval) {
+    pHArray[pHArrayIndex++] = analogRead(SensorPin);
+    if (pHArrayIndex == ArrayLenth) pHArrayIndex = 0;
+
+    //Serial.println(analogRead(SensorPin));
+
+    voltage = avergearray(pHArray, ArrayLenth) * 5.0 / 1024;
+    pHValue = slope * voltage + intercept;  
+    Serial.println(voltage);
+
+    samplingTime = millis();
+  }
+
+  if (millis() - printTime > printInterval) {
+    printTime = millis();
+
+    return pHValue;
+  }
+
+  
+}
+
+// Chargement des valeurs de calibration depuis l'EEPROM
+void loadCalibration() {
+  if (voltage_4 == 0 || voltage_7 == 0) {
+    slope = -19.18518519; 
+    intercept = 41.02740741;
+  } else {
+    slope = (7.0 - 4.0) / (voltage_7 - voltage_4);
+    intercept = 7.0 - (slope * voltage_7);
+  }
+}
+
+// Fonction de filtrage des valeurs extrêmes (inchangée)
+double avergearray(int* arr, int number) {
+  int i;
+  int max, min;
+  double avg;
+  long amount = 0;
+
+  if (number <= 0) {
+    uart.println("Error: Invalid array size.");
+    return 0;
+  }
+  if (number < 5) { 
+    for (i = 0; i < number; i++) {
+      amount += arr[i];
+    }
+    avg = amount / number;
+    return avg;
+  } else {
+    if (arr[0] < arr[1]) {
+      min = arr[0]; max = arr[1];
+    } else {
+      min = arr[1]; max = arr[0];
+    }
+    for (i = 2; i < number; i++) {
+      if (arr[i] < min) {
+        amount += min;
+        min = arr[i];
+      } else if (arr[i] > max) {
+        amount += max;
+        max = arr[i];
+      } else {
+        amount += arr[i];
+      }
+    }
+    avg = (double)amount / (number - 2);
+  }
+  return avg;
 }
