@@ -1,5 +1,4 @@
 # Projet composteur
 Repo du projet composteur
 
-
-![Architecture Systeme - Composteur](https://github.com/user-attachments/assets/da079198-6b6c-4c16-9085-c946df8af1d3)
+![Achitecture Système Composteur drawio](https://github.com/user-attachments/assets/aa72af98-c362-4c72-867d-5d3c32d0c03f)
